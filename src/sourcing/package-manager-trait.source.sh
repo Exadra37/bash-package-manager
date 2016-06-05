@@ -74,7 +74,7 @@ set -e
         source "${source_path}"
     }
 
-    function install
+    function require
     {
         local vendor_name="${1}"
         local package_name="${2}"
