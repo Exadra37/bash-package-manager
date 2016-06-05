@@ -16,10 +16,19 @@ set -e
 
 
 #################################################################################################################################################################
+# Declare Variables
+#################################################################################################################################################################
+
+    green=`tput setaf 2`
+    yellow=`tput setaf 3`
+    reset=`tput sgr0`
+
+
+#################################################################################################################################################################
 # Execution
 #################################################################################################################################################################
 
-    # examples how to install a package dependency from:
-    #  - default gitgub repo service -> ./package-manager.sh install exadra37-bash file-system 0.1.0
-    #  - other repo service -> ./package-manager.sh install exadra37-bash file-system 0.1.0 gitlab.com
+    [ "--version" == "${1}" ] && printf "\n Bash Package Manager ${green}0.1.0 ${reset} by ${yellow}Exadra37 ${reset} \n" && exit 0
+
+    # see how to use in https://github.com/exadra37-bash/package-manager/blob/master/README.md
     "$@"
