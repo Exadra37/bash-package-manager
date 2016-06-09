@@ -58,7 +58,7 @@ set -e
                 # decide what to do:
                 #   - remove package in order git can clone it?
                 #   - skip install, once we already have the package?
-                printf "\n Already installed package $from_github_repo \n"
+                printf "\n Already installed package ${from_github_repo} \n"
             else
                 mkdir -p "${vendor_name_path}"
                 Git_Soft_Clone "${from_github_repo}" "${for_vendor_path}" "${package_version}" "${output_to}"
