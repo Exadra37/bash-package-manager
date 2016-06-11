@@ -28,7 +28,9 @@ set -e
 # Execution
 #################################################################################################################################################################
 
-    [ "--version" == "${1}" ] && printf "\n Bash Package Manager ${green}0.1.0 ${reset} by ${yellow}Exadra37 ${reset} \n" && exit 0
+    ([ -z "${1}" ] || [ "-h" == "${1}" ] || [ "--help" == "${1}" ]) && printf "\n Usage: bpm [install, -h, --help, -v, --version] \n" && exit 1
+
+    ([ "-v" == "${1}" ] || [ "--version" == "${1}" ]) && printf "\n Bash Package Manager ${green}0.1.0 ${reset} by ${yellow}Exadra37 ${reset} \n" && exit 0
 
     # see how to use in https://github.com/exadra37-bash/package-manager/blob/master/README.md
     "$@"
