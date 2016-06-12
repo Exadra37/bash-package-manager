@@ -30,6 +30,17 @@ The recommended way is to clone this package into the `vendor` folder off the Ba
 # for Bash shell
 > echo "alias bpm=/usr/local/bin/vendor/exadra37-bash/package-manager/src/package-manager.sh" >> ~/.bashrc && . ~/.bashrc
 ```
+##### Running alias with root Privileges
+
+In some situations we may need to run an **alias** with root privileges, but if we use **sudo** it will not recognize any alias, therefore we need to use a little trick for **sudo** be able to recognize any alias, by adding itself as an alias `sudo `, note the white space in the end ;)
+
+```bash
+# for ZSH shell - IF YOU ARE NOT USING IT, YOU SHOULD ;)
+> echo "alias sudo='sudo '" >> ~/.zshrc && . ~/.zshrc
+
+# for Bash shell
+> echo "alias sudo='sudo '" >> ~/.bashrc && . ~/.bashrc
+```
 
 #### Lets try out our new alias:
 
@@ -42,7 +53,7 @@ Bash Package Manager 0.1.0  by Exadra37
 **NOTES:**
 
 * the alias `bpm` will work for any of your projects using this package, therefore you may want to add it permanently to your shell.
-* with alias or without alias, this package must be always called from the root of your project and have the package already installed in the vendor folder.
+* with alias or without alias, this package must be always called from the root of your project.
 
 ## How to Use
 
