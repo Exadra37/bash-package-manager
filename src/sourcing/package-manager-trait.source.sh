@@ -157,6 +157,27 @@ set -e
         Install_Required_Packages
     }
 
+    function Print_Help
+    {
+        Print_Line_Break
+
+        Print_Bold_Label_With_Text "USAGE: " "bpm [install, -h, --help, -v, --version]" "green" "yellow"
+
+        Print_Line_Break
+    }
+
+    function Print_Version
+    {
+        local versionColor="green";
+        local authorColor="yellow";
+
+        Print_Line_Break;
+
+        Print_Text "Bash Package Manager "; Print_Text_Colored "0.1.0" "${versionColor}"; Print_Text " by "; Print_Text_Colored "Exadra37" "${authorColor}";
+
+        Print_Empty_Line;
+    }
+
 
 #################################################################################################################################################################
 # Auto Source Dependencies
