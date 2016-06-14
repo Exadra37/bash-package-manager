@@ -125,6 +125,23 @@ set -e
         Git_Clone_Required_Package_Recursively "${vendor_name}" "${package_name}" "${package_version}" "${repo_domain_name}"
     }
 
+    function Append_To_Required_Packages
+    {
+        local vendor_name="${1}"
+        local package_name="${2}"
+        local package_version="${3}"
+        local repo_domain_name="${4:-github.com}"
+
+        local required_packages_file="./required-packages.pkg"
+
+        if [ -f "${required_packages_file}" ] && grep -iq "${vendor_name},${package_name}" "${required_packages_file}"
+            then
+                Print_Fatal_Error "Package already exists."
+            else
+                Append_To_File "${required_packages_file}" "${repo_domain_name},${vendor_name},${package_name},${package_version}"
+        fi
+    }
+
     function install
     {
         Install_Required_Packages
