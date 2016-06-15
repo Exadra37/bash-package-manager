@@ -83,22 +83,30 @@ set -e
         fi
     }
 
-    function Auto_Source_Required_Package_Recursively
+    function Auto_Source_Dependency
     {
         local vendor_name="${1}"
         local package_name="${2}"
         local package_version="${3}"
         local file_name="${4}"
-        local base_path="${5:-.}"
+        local package_path="${5:-.}"
         local repo_domain_name="${6}"
 
+        local for_vendor_path="${package_path}/vendor"
         local output_to="/dev/null"
 
-        local source_path="${base_path}/vendor/${vendor_name}/${package_name}/${file_name}"
+        local source_path="${for_vendor_path}/${vendor_name}/${package_name}/${file_name}"
 
-        [ -f "${source_path}" ] || Git_Clone_Required_Package_Recursively "${vendor_name}" "${package_name}" "${package_version}" "${repo_domain_name}" "${base_path}" "${output_to}"
+        if [ -f "${source_path}" ]
+            then
+                source "${source_path}"
+            else
+                Git_Clone_Required_Package_Recursively "${vendor_name}" "${package_name}" "${package_version}" "${repo_domain_name}" "${for_vendor_path}" "${output_to}"
 
-        source "${source_path}"
+                source "${source_path}"
+
+                Append_To_Required_Packages "${vendor_name}" "${package_name}" "${package_version}" "${repo_domain_name}"
+        fi
     }
 
     function Source_Dependency
@@ -123,9 +131,57 @@ set -e
         local repo_domain_name="${4}"
 
         Git_Clone_Required_Package_Recursively "${vendor_name}" "${package_name}" "${package_version}" "${repo_domain_name}"
+
+        Append_To_Required_Packages "${vendor_name}" "${package_name}" "${package_version}" "${repo_domain_name}"
+    }
+
+    function Append_To_Required_Packages
+    {
+        local vendor_name="${1}"
+        local package_name="${2}"
+        local package_version="${3}"
+        local repo_domain_name="${4:-github.com}"
+
+        local required_packages_file="./required-packages.pkg"
+
+        if [ -f "${required_packages_file}" ] && grep -iq "${vendor_name},${package_name}" "${required_packages_file}"
+            then
+                Print_Fatal_Error "Package already exists."
+            else
+                Append_To_File "${required_packages_file}" "${repo_domain_name},${vendor_name},${package_name},${package_version}"
+        fi
     }
 
     function install
     {
         Install_Required_Packages
     }
+
+    function Print_Help
+    {
+        Print_Line_Break
+
+        Print_Bold_Label_With_Text "USAGE: " "bpm [install, -h, --help, -v, --version]" "green" "yellow"
+
+        Print_Line_Break
+    }
+
+    function Print_Version
+    {
+        local versionColor="green";
+        local authorColor="yellow";
+
+        Print_Line_Break;
+
+        Print_Text "Bash Package Manager "; Print_Text_Colored "0.1.0" "${versionColor}"; Print_Text " by "; Print_Text_Colored "Exadra37" "${authorColor}";
+
+        Print_Empty_Line;
+    }
+
+
+#################################################################################################################################################################
+# Auto Source Dependencies
+#################################################################################################################################################################
+
+Auto_Source_Dependency "exadra37-bash" "file-system" "0.3.0" "src/sourcing/file-system-trait.source.sh"
+Auto_Source_Dependency "exadra37-bash" "pretty-print" "0.1.0" "src/sourcing/pretty-print-trait.source.sh"
