@@ -44,7 +44,6 @@ set -e
         local package_version="${3}"
         local repo_domain_name="${4:-github.com}"
         local base_path="${5:-.}"
-        local output_to="${6}"
 
         local vendor_name_path="${base_path}/${vendor_name}"
 
@@ -61,7 +60,7 @@ set -e
                 printf "\n Already installed package ${from_github_repo} \n"
             else
                 mkdir -p "${vendor_name_path}"
-                Git_Soft_Clone "${from_github_repo}" "${for_vendor_path}" "${package_version}" "${output_to}"
+                Git_Soft_Clone "${from_github_repo}" "${for_vendor_path}" "${package_version}"
         fi
 
         Install_Required_Packages "${for_vendor_path}"
@@ -72,15 +71,8 @@ set -e
         local from_github_repo="${1}"
         local to_vendor_path="${2}"
         local package_version="${3}"
-        local output_to="${4}"
 
-        if [ -z "${output_to}" ]
-            then
-                git clone -q -b "${package_version}" --single-branch --depth 1 "${from_github_repo}" "${to_vendor_path}"
-
-            else
-                git clone -q -b "${package_version}" --single-branch --depth 1 "${from_github_repo}" "${to_vendor_path}" #&> "${output_to}"
-        fi
+        git clone -q -b "${package_version}" -n --depth 1 "${from_github_repo}" "${to_vendor_path}" && cd "${to_vendor_path}" && git checkout -q -b "${package_version}" && cd - > /dev/null
     }
 
     function Auto_Source_Dependency
@@ -93,7 +85,6 @@ set -e
         local repo_domain_name="${6}"
 
         local for_vendor_path="${package_path}/vendor"
-        local output_to="/dev/null"
 
         local source_path="${for_vendor_path}/${vendor_name}/${package_name}/${file_name}"
 
@@ -101,7 +92,7 @@ set -e
             then
                 source "${source_path}"
             else
-                Git_Clone_Required_Package_Recursively "${vendor_name}" "${package_name}" "${package_version}" "${repo_domain_name}" "${for_vendor_path}" "${output_to}"
+                Git_Clone_Required_Package_Recursively "${vendor_name}" "${package_name}" "${package_version}" "${repo_domain_name}" "${for_vendor_path}"
 
                 source "${source_path}"
 
