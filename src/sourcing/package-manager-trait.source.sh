@@ -135,10 +135,16 @@ set -e
 
         local required_packages_file="./required-packages.pkg"
 
-        if [ -f "${required_packages_file}" ] && grep -iq "${vendor_name},${package_name}" "${required_packages_file}"
+        if [ ! -f "${required_packages_file}" ]
             then
-                Print_Fatal_Error "Package already exists."
-            else
+                touch "${required_packages_file}"
+        fi
+
+        if grep -iq "${vendor_name},${package_name}" "${required_packages_file}" && ! grep -iq "${vendor_name},${package_name},${package_version}" "${required_packages_file}"
+            then
+                Print_Fatal_Error "Package ${vendor_name}/${package_name} already exists in a version different from the required ${package_version} version."
+        elif ! grep -iq "${vendor_name},${package_name}" "${required_packages_file}"
+            then
                 Append_To_File "${required_packages_file}" "${repo_domain_name},${vendor_name},${package_name},${package_version}"
         fi
     }
