@@ -9,51 +9,38 @@ It can also automaticcly resolve and source dependencies within our own bash scr
 
 ## How to install
 
-The recommended way is to clone this package into the `vendor` folder off the Bash project we need to handle the dependencies and make an alias to it.
+The recommended way is to install it globally for the current user and make an alias to it.
 
 #### Preferred method is to install globally in our environment:
 
 ```bash
-# this path is for Ubuntu 14.04, may be necessary to adjust in other O.S.
-> cd /usr/local/bin
+$ git clone -q -b master --depth 1 https://github.com/exadra37-bash/package-manager.git ~/vendor/exadra37-bash/package-manager && cd ~/vendor/exadra37-bash/package-manager && ./src/package-manager.sh
 
-# this must be run as root, therefore is prefixed with `sudo` if it fails to run
-> git clone -b master --single-branch --depth 1 https://github.com/exadra37-bash/package-manager.git vendor/exadra37-bash/package-manager
+USAGE: bpm [install, -h, --help, -v, --version]
 ```
 
 #### Permanent Alias
 
-```bash
-# for ZSH shell - IF YOU ARE NOT USING IT, YOU SHOULD ;)
-> echo "alias bpm=/usr/local/bin/vendor/exadra37-bash/package-manager/src/package-manager.sh" >> ~/.zshrc && . ~/.zshrc
-
-# for Bash shell
-> echo "alias bpm=/usr/local/bin/vendor/exadra37-bash/package-manager/src/package-manager.sh" >> ~/.bashrc && . ~/.bashrc
-```
-##### Running alias with root Privileges
-
-In some situations we may need to run an **alias** with root privileges, but if we use **sudo** it will not recognize any alias, therefore we need to use a little trick for **sudo** be able to recognize any alias, by adding itself as an alias `sudo `, note the white space in the end ;)
+Creating an alias to this package is strongly recommended, once all instructions to use it assume that you have the alias `bpm` created in your system.
 
 ```bash
 # for ZSH shell - IF YOU ARE NOT USING IT, YOU SHOULD ;)
-> echo "alias sudo='sudo '" >> ~/.zshrc && . ~/.zshrc
+$ echo "alias bpm=~/vendor/exadra37-bash/package-manager/src/package-manager.sh" >> ~/.zshrc && . ~/.zshrc
 
 # for Bash shell
-> echo "alias sudo='sudo '" >> ~/.bashrc && . ~/.bashrc
+$ echo "alias bpm=~/vendor/exadra37-bash/package-manager/src/package-manager.sh" >> ~/.bashrc && . ~/.bashrc
 ```
 
 #### Lets try out our new alias:
 
 ```bash
-> bpm --version
+$ bpm --version
 
 Bash Package Manager 0.1.0  by Exadra37
 ```
 
-**NOTES:**
+**NOTES:** with alias or without alias, this package must be always called from the root of your project.
 
-* the alias `bpm` will work for any of your projects using this package, therefore you may want to add it permanently to your shell.
-* with alias or without alias, this package must be always called from the root of your project.
 
 ## How to Use
 
@@ -61,9 +48,9 @@ This package can be used from command line or from any bash script that needs to
 
 #### From Command Line
 
-Assuming we have followed the previous steps in `How to Install` and that we have created the alias and we still in the root of our package or project, we can try some examples.
+Assuming that the previous steps in `How to Install` have been followed, that the alias `bpm` has been created, we can try some examples.
 
-##### Auto Install Recursively
+#### Auto Install Recursively
 
 Invoking `install` will read all required packages from file `required-packages.pkg` if it exists in the root of your project or package.
 
@@ -71,7 +58,7 @@ This is done recursively, by looking in each package it installs, for the file `
 
 The file `required-packages.pkg` must require a package per line in the format `repository-service-url,vendor-name,package-name,package-version`.
 
-The `required-packages.pkg` file should look like:
+The file `required-packages.pkg` located in the root of you package or project should look like this:
 
 ```bash
 github.com,exadra37-bash,file-system,0.2.0
@@ -80,31 +67,37 @@ github.com,exadra37-bash,pretty-print,0.1.0
 github.com,exadra37-bash,strings-manipulation,0.2.0
 github.com,exadra37-bash,package-signature,0.1.0
 ```
+**NOTE: DO NOT LEAVE BLANK SPACES BETWEEN COMMAS**
 
-To auto install recursively the above packages, contained in the root of your project or package, just type:
+To auto install recursively the above packages, just type from the root of your project:
 
 ```bash
-> bpm install
+$ bpm install
 ```
 
-##### Manual Require Recursively
+#### Manual Require Recursively
 
-When invoking `require`, we need to specify in the arguments the `vendor-name` `package-name` `package-version` and optionally the `repository-service-url`
+When invoking `require`, we need to specify the following arguments:
 
-###### Require from default Repository Service
+* `vendor-name`
+* `package-name`
+* `package-version`
+* `repository-service-url` (optional)
+
+##### Require from default Repository Service Provider
 
 To install from the default repository provider, Github, the package `exadra37-bash/file-system` in version `0.2.0`, we just need to type in command line:
 
 ```bash
-> bpm require exadra37-bash file-system 0.2.0
+$ bpm require exadra37-bash file-system 0.2.0
 ```
 
-###### Require from other Repositories Services
+##### Require from other Repository Service Provider
 
 To install the same package, from **Example 1**, but from other repository service provider, like Gitlab, we will need to add into the end the domain name `gitlab.com`:
 
 ```bash
-> bpm require exadra37-bash file-system 0.2.0 gitlab.com
+$ bpm require exadra37-bash file-system 0.2.0 gitlab.com
 ```
 
 Now that we have the required packages to develop our project or package, we just need to source them as usually we do with any other file we want to include in our Bash Script.
@@ -136,7 +129,7 @@ Auto_Source_Dependency "exadra37-bash" "pretty-print" "0.1.0" "src/sourcing/pret
 ##### In order to see it working lets create a demo script:
 
 ```bash
-> mkdir -p src && touch src/demo-auto-sourcing.sh && chmod +x src/demo-auto-sourcing.sh && vim src/demo-auto-sourcing.sh
+$ mkdir -p src && touch src/demo-auto-sourcing.sh && chmod +x src/demo-auto-sourcing.sh && vim src/demo-auto-sourcing.sh
 ```
 
 ##### Copy paste the below code into the `demo-auto-sourcing.sh`;
@@ -184,7 +177,7 @@ set -e
 ##### Let's run our demo script:
 
 ```bash
-> ./src/demo-auto-sourcing.sh
+$ ./src/demo-auto-sourcing.sh
 
  SUCCESS: Auto Sourced Dependency Successfully :).
 
@@ -195,4 +188,4 @@ set -e
  ALERT: Pretty Print can do a lot more funny stuff... go to https://github.com/exadra37-bash/pretty-print for more examples.
 ```
 
-If the above output can't be seen, please perform all the steps again and ensure that you not skip any or make some typos.
+If the above output can't be seen, please perform all the steps again and ensure that you do not skip any of them or that you are not making some typos.
