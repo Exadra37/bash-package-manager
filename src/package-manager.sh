@@ -10,9 +10,9 @@ set -e
 # Sourcing Dependencies
 #################################################################################################################################################################
 
-    script_dir=$( cd "$( dirname "$0" )" && pwd )
+    script_dir=$(dirname $(readlink -f $0))
 
-    source "${script_dir}/sourcing/package-manager-trait.source.sh"
+    source "${script_dir}"/sourcing/package-manager-trait.source.sh
 
 
 #################################################################################################################################################################

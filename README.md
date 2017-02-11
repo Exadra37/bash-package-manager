@@ -9,37 +9,26 @@ It can also automaticcly resolve and source dependencies within our own bash scr
 
 ## How to install
 
-The recommended way is to install it globally for the current user and make an alias to it.
+The recommended way is to install it globally for the current user and make it available from PATH.
 
-#### Preferred method is to install globally in our environment:
+#### Using Curl
 
-```bash
-$ git clone -q -b master --depth 1 https://github.com/exadra37-bash/package-manager.git ~/vendor/exadra37-bash/package-manager && cd ~/vendor/exadra37-bash/package-manager && ./src/package-manager.sh
-
-USAGE: bpm [install, -h, --help, -v, --version]
-```
-
-#### Permanent Alias
-
-Creating an alias to this package is strongly recommended, once all instructions to use it assume that you have the alias `bpm` created in your system.
+We will use the self installer script that will take care of all for us.
 
 ```bash
-# for ZSH shell - IF YOU ARE NOT USING IT, YOU SHOULD ;)
-$ echo "alias bpm=~/vendor/exadra37-bash/package-manager/src/package-manager.sh" >> ~/.zshrc && . ~/.zshrc
-
-# for Bash shell
-$ echo "alias bpm=~/vendor/exadra37-bash/package-manager/src/package-manager.sh" >> ~/.bashrc && . ~/.bashrc
+curl -L https://github.com/exadra37-bash/package-manager/raw/0.2.0/self-install.sh | bash -s
 ```
 
-#### Lets try out our new alias:
+
+#### Lets try it out
 
 ```bash
 $ bpm --version
 
-Bash Package Manager 0.1.0  by Exadra37
+Bash Package Manager 0.2.0  by Exadra37
 ```
 
-**NOTES:** with alias or without alias, this package must be always called from the root of your project.
+**NOTES:** this package must be always called from the root of your project.
 
 
 ## How to Use
@@ -48,7 +37,7 @@ This package can be used from command line or from any bash script that needs to
 
 #### From Command Line
 
-Assuming that the previous steps in `How to Install` have been followed, that the alias `bpm` has been created, we can try some examples.
+Assuming that the previous steps in `How to Install` have been followed successfully, we can try some examples.
 
 #### Auto Install Recursively
 

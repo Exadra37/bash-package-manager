@@ -180,5 +180,7 @@ set -e
 # Auto Source Dependencies
 #################################################################################################################################################################
 
-Auto_Source_Dependency "exadra37-bash" "file-system" "0.3.0" "src/sourcing/file-system-trait.source.sh"
-Auto_Source_Dependency "exadra37-bash" "pretty-print" "0.1.0" "src/sourcing/pretty-print-trait.source.sh"
+    script_dir=$( cd "$( dirname "$0" )" && pwd )
+
+    Auto_Source_Dependency "exadra37-bash" "file-system" "0.3.0" "${sscript_dir}"/src/sourcing/file-system-trait.source.sh
+    Auto_Source_Dependency "exadra37-bash" "pretty-print" "0.1.0" "${sscript_dir}"/src/sourcing/pretty-print-trait.source.sh
