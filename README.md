@@ -4,177 +4,63 @@ To keep our code organized, reusable and decoupled as much as possible, we need 
 
 Bash Package Manager `bpm` will allow to require packages we depend on, with a simple command.
 
-It can also automaticcly resolve and source dependencies within our own bash scripts, from code repositories like Github or Gitlab.
+It can also resolve and source dependencies within our own bash scripts, from code repositories like Github or Gitlab.
 
 
-## How to install
+## AUTHOR
 
-The recommended way is to install it globally for the current user and make it available from PATH.
+More information about the Author can be found [here](AUTHOR.md).
 
-#### Using Curl
 
-We will use the self installer script that will take care of all for us.
+## CONTRIBUTORS
 
-```bash
-curl -L https://github.com/exadra37-bash/package-manager/raw/0.2.0/self-install.sh | bash -s
-```
+All contributors can be found [here](CONTRIBUTORS.md).
 
 
-#### Lets try it out
+## LICENSE
 
-```bash
-$ bpm --version
+This repository uses GPL-3.0 license, that you can find [here](LICENSE).
 
-Bash Package Manager 0.2.0  by Exadra37
-```
 
-**NOTES:** this package must be always called from the root of your project.
+## CONTRIBUTING IN ISSUES / MERGE REQUESTS
 
+All contributions are welcome provided that they follow [Contributing Guidelines](CONTRIBUTING.md), where you can find
+how to _Create an Issue_ and _Merge Request_.
 
-## How to Use
 
-This package can be used from command line or from any bash script that needs to source some dependencies.
+## ROAD MAP
 
-#### From Command Line
+Check [Milestones](https://gitlab.com/exadra37-bash/package-manager/milestones) to see what Goals I want to achieve.
 
-Assuming that the previous steps in `How to Install` have been followed successfully, we can try some examples.
+Watch [Boards](https://gitlab.com/exadra37-bash/package-manager/boards) to keep track of what is going on.
 
-#### Auto Install Recursively
 
-Invoking `install` will read all required packages from file `required-packages.pkg` if it exists in the root of your project or package.
 
-This is done recursively, by looking in each package it installs, for the file `required-packages.pkg` and installing also that packages, until no more required packages are found to install.
+## HOW TO INSTALL
 
-The file `required-packages.pkg` must require a package per line in the format `repository-service-url,vendor-name,package-name,package-version`.
+To install just follow detailed instructions from [here](docs/how-to/install.md).
 
-The file `required-packages.pkg` located in the root of you package or project should look like this:
 
-```bash
-github.com,exadra37-bash,file-system,0.2.0
-github.com,exadra37-bash,git-helpers,0.1.0
-github.com,exadra37-bash,pretty-print,0.1.0
-github.com,exadra37-bash,strings-manipulation,0.2.0
-github.com,exadra37-bash,package-signature,0.1.0
-```
-**NOTE: DO NOT LEAVE BLANK SPACES BETWEEN COMMAS**
+## HOW TO UNINSTALL
 
-To auto install recursively the above packages, just type from the root of your project:
+To uninstall just follow detailed instructions from [here](docs/how-to/uninstall.md).
 
-```bash
-$ bpm install
-```
 
-#### Manual Require Recursively
+## HOW TO USE
 
-When invoking `require`, we need to specify the following arguments:
+See usage examples [here](docs/how-to/use.md).
 
-* `vendor-name`
-* `package-name`
-* `package-version`
-* `repository-service-url` (optional)
 
-##### Require from default Repository Service Provider
+## BRANCHES
 
-To install from the default repository provider, Github, the package `exadra37-bash/file-system` in version `0.2.0`, we just need to type in command line:
+Branches are created as demonstrated [here](docs/how-to/create_branches.md).
 
-```bash
-$ bpm require exadra37-bash file-system 0.2.0
-```
+This are the type of branches we can see at any moment in the repository:
 
-##### Require from other Repository Service Provider
+* `master` - issues and milestones branches will be merge here.
+* `last-stable-release` - matches the last stable tag created. Useful for automation tools.
+* `issue-4_fix-email-validation` (issue-number_title) - each issue will have is own branch for development.
+* `milestone-12_add-cache` (milestone-number_title) - all Milestone issues will start, track and merged here.
 
-To install the same package, from **Example 1**, but from other repository service provider, like Gitlab, we will need to add into the end the domain name `gitlab.com`:
-
-```bash
-$ bpm require exadra37-bash file-system 0.2.0 gitlab.com
-```
-
-Now that we have the required packages to develop our project or package, we just need to source them as usually we do with any other file we want to include in our Bash Script.
-
-```bash
-# this example is assuming that the script from where we source,
-#  is located 1 level inside our project or package, like in `src` folder
-source ../vendor/vendor-name/package-name/src/sourcing/file-to-source.sh
-```
-
-
-#### From Within a Bash Script
-
-Considering that the instructions in **How to Install** have been followed, the following example will show how to integrate Bash Package Manager functionality to Auto Source Dependencies into any Bash Script.
-
-##### To use it from within any bash script, just include this lines:
-
-```bash
-# we need to determine the absolut path for this bash script
-script_path=$( cd "$( dirname "$0" )" && pwd )
-
-# we need to manually source our Bash Package Manager
-source "${script_path}/../vendor/exadra37-bash/package-manager/src/sourcing/package-manager-trait.source.sh"
-
-# Now we can automaticcly source any dependency we need to run our bash script
-Auto_Source_Dependency "exadra37-bash" "pretty-print" "0.1.0" "src/sourcing/pretty-print-trait.source.sh" "${script_path}/../"
-```
-
-##### In order to see it working lets create a demo script:
-
-```bash
-$ mkdir -p src && touch src/demo-auto-sourcing.sh && chmod +x src/demo-auto-sourcing.sh && vim src/demo-auto-sourcing.sh
-```
-
-##### Copy paste the below code into the `demo-auto-sourcing.sh`;
-
-```bash
-#!/bin/bash
-# @author Exadra37(Paulo Silva) <exadra37ingmailpointcom>
-# @since  2016/06/04
-# @link   https://exadra37.com
-
-set -e
-
-
-#################################################################################################################################################################
-# Declare Variables
-#################################################################################################################################################################
-
-    script_path=$( cd "$( dirname "$0" )" && pwd )
-
-
-#################################################################################################################################################################
-# Sourcing Dependencies
-#################################################################################################################################################################
-
-    source "${script_path}/../vendor/exadra37-bash/package-manager/src/sourcing/package-manager-trait.source.sh"
-
-    Auto_Source_Dependency "exadra37-bash" "pretty-print" "0.1.0" "src/sourcing/pretty-print-trait.source.sh" "${script_path}/../"
-
-
-#################################################################################################################################################################
-# Execution
-#################################################################################################################################################################
-
-    # Lets see if we can use some of the nice Pretty Print functions
-
-    Print_Success "Auto Sourced Dependency Successfully :)."
-
-    Print_Info "The first time the script runs all dependencies are cloned from remote repositories, if they do not exist in the vendor folder."
-
-    Print_Info "Next time we run this script, Auto Sourcing the Dependency will not need to clone it, therefore will run faster."
-
-    Print_Alert "Pretty Print can do a lot more funny stuff... go to https://github.com/exadra37-bash/package-manager for more examples."
-```
-
-##### Let's run our demo script:
-
-```bash
-$ ./src/demo-auto-sourcing.sh
-
- SUCCESS: Auto Sourced Dependency Successfully :).
-
- INFO: The first time the script runs all dependencies are cloned from remote repositories, if they do not exist in the vendor folder.
-
- INFO: Next time we run this script, Auto Sourcing the Dependency will not need to clone it, therefore will run faster.
-
- ALERT: Pretty Print can do a lot more funny stuff... go to https://github.com/exadra37-bash/pretty-print for more examples.
-```
-
-If the above output can't be seen, please perform all the steps again and ensure that you do not skip any of them or that you are not making some typos.
+Only `master` and `last-stable-release` branches will be permanent ones in the repository and all other ones will be
+removed once they are merged.
