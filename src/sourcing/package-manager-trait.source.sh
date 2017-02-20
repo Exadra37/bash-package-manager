@@ -96,7 +96,7 @@ set -e
 
                 source "${source_path}"
 
-                Append_To_Required_Packages "${vendor_name}" "${package_name}" "${package_version}" "${repo_domain_name}"
+                Append_To_Required_Packages "${vendor_name}" "${package_name}" "${package_version}" "${repo_domain_name}" "${package_path}"
         fi
     }
 
@@ -121,7 +121,7 @@ set -e
         local package_version="${3}"
         local repo_domain_name="${4}"
 
-        Git_Clone_Required_Package_Recursively "${vendor_name}" "${package_name}" "${package_version}" "${repo_domain_name}"
+        Git_Clone_Required_Package_Recursively "${vendor_name}" "${package_name}" "${package_version}" "${repo_domain_name}" "./vendor"
 
         Append_To_Required_Packages "${vendor_name}" "${package_name}" "${package_version}" "${repo_domain_name}"
     }
@@ -132,8 +132,9 @@ set -e
         local package_name="${2}"
         local package_version="${3}"
         local repo_domain_name="${4:-github.com}"
+        local package_path="${5:-.}"
 
-        local required_packages_file="./required-packages.pkg"
+        local required_packages_file="${package_path}"/required-packages.pkg
 
         if [ ! -f "${required_packages_file}" ]
             then
@@ -180,7 +181,9 @@ set -e
 # Auto Source Dependencies
 #################################################################################################################################################################
 
-    script_dir=$( cd "$( dirname "$0" )" && pwd )
+    #script_dir=$( cd "$( dirname "$0" )" && pwd )
+    script_dir=$( dirname $(dirname $(readlink -f $0)))
 
-    Auto_Source_Dependency "exadra37-bash" "file-system" "0.3.0" "${sscript_dir}"/src/sourcing/file-system-trait.source.sh
-    Auto_Source_Dependency "exadra37-bash" "pretty-print" "0.1.0" "${sscript_dir}"/src/sourcing/pretty-print-trait.source.sh
+
+    Auto_Source_Dependency "exadra37-bash" "file-system" "0.3.0" src/sourcing/file-system-trait.source.sh "${script_dir}"
+    Auto_Source_Dependency "exadra37-bash" "pretty-print" "0.1.0" src/sourcing/pretty-print-trait.source.sh "${script_dir}"
