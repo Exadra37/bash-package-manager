@@ -76,7 +76,7 @@ set -e
         git clone -q -b "${package_version}" --depth 1 "${from_github_repo}" "${to_vendor_path}" &> /dev/null
 
         # We only want to checkout to a new branch if package version is a tag, because when is a branch git clone will do that for us.
-        if Is_Git_Tag "${package_version}"
+        if Is_Git_Tag "${package_version}" "${to_vendor_path}"
             then
                 cd "${to_vendor_path}"
 
@@ -89,20 +89,17 @@ set -e
         ### VARIABLES ARGUMENTS ###
 
             local _package_version="${1?}"
-
-
-        ### VARIABLES COMPOSITION ###
-
-            # remove all non alpha numeric characthers except '.'
-            local _git_tag="${_package_version//[!0-9.]/}"
+            local _to_vendor_path="${2}"
 
 
         ### EXECUTION ###
 
-            case "${_git_tag}" in
-                ''|[!0-9.]) return 1 ;; # Not a Git Tag.
-                *) return 0 ;; # Probably a Git Tag ;).
-            esac
+            if [ -z "$(cd "${_to_vendor_path}" && git tag)" ]
+                then
+                    return 1 # no git tags
+            fi
+
+            return 0 # we have git tags
     }
 
     function Auto_Source_Dependency
