@@ -66,13 +66,43 @@ set -e
         Install_Required_Packages "${for_vendor_path}"
     }
 
+
     function Git_Soft_Clone
     {
         local from_github_repo="${1}"
         local to_vendor_path="${2}"
         local package_version="${3}"
 
-        git clone -q -b "${package_version}" -n --depth 1 "${from_github_repo}" "${to_vendor_path}" && cd "${to_vendor_path}" && git checkout -q -b "${package_version}" && cd - > /dev/null
+        git clone -q -b "${package_version}" --depth 1 "${from_github_repo}" "${to_vendor_path}" &> /dev/null
+
+        # We only want to checkout to a new branch if package version is a tag, because when is a branch git clone will do that for us.
+        if Is_Git_Tag "${package_version}"
+            then
+                cd "${to_vendor_path}"
+
+                git checkout -q -b "${package_version}"
+        fi
+    }
+
+    function Is_Git_Tag()
+    {
+        ### VARIABLES ARGUMENTS ###
+
+            local _package_version="${1?}"
+
+
+        ### VARIABLES COMPOSITION ###
+
+            # remove all non alpha numeric characthers except '.'
+            local _git_tag="${_package_version//[!0-9.]/}"
+
+
+        ### EXECUTION ###
+
+            case "${_git_tag}" in
+                ''|[!0-9.]) return 1 ;; # Not a Git Tag.
+                *) return 0 ;; # Probably a Git Tag ;).
+            esac
     }
 
     function Auto_Source_Dependency
