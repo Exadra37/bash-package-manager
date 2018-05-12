@@ -245,7 +245,7 @@ set -e
 
     Create_Sym_Link "${package_manager_script}" "${sym_link}"
 
-    Export_Path
+    Export_Path "${bin_dir}"
 
     # Let's test it
     bpm --help
