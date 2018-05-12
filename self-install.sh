@@ -151,12 +151,12 @@ set -e
 
         ### EXECCUTION ###
 
-            if [ $(grep -c "${_home_path}" "${_shell_file}") -eq 0 ] || [ $(grep -c ${_bin_dir} "${_shell_file}") -eq 0 ]
+            if [ -z "${PATH##*${_bin_dir}*}" ]
                 then
-                    return 0
+                    return 0 # true
             fi
 
-            return 1
+            return 1 # false
     }
 
 
@@ -167,26 +167,14 @@ set -e
             local _home_path=/home/"${USER}"
             local _bin_dir="${1?}"
 
-            PATH=${_bin_dir}:${PATH}
-
+            
         ### EXECCUTION ###
 
-            if [ -f "${_home_path}"/.profile ] && Is_Home_User_Bin_Not_In_Path "${_home_path}" ".profile" "${bin_dir}"
+            if [ -z "${PATH##*${_bin_dir}*}" ]
                 then
-                    echo "export ${PATH}"  >> "${_home_path}/.profile"
+                    PATH=${_bin_dir}:${PATH}
+                    export PATH
             fi
-
-            if [ -f "${_home_path}"/.bash_profile ] && Is_Home_User_Bin_Not_In_Path "${_home_path}" ".bash_profile" "${bin_dir}"
-                then
-                    echo "export ${PATH}"  >> "${_home_path}/.bash_profile"
-            fi
-
-            if [ -f "${_home_path}"/.zshrc ] && Is_Home_User_Bin_Not_In_Path "${_home_path}" ".zshrc" "${bin_dir}"
-                then
-                    echo "export ${PATH}"  >> "${_home_path}/.zshrc"
-            fi
-
-            export PATH
     }
 
     function Tweet_Me()
