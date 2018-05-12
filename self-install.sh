@@ -41,21 +41,21 @@ set -e
         printf "\n\e[1;42m ${1}:\e[30;48;5;229m ${2} \e[0m \n"
     }
 
-    
+
     function Abort_If_Url_Not_Available()
     {
         ### VARIABLES ARGUMENTS ###
 
             local _url="${1}"
-        
-        
+
+
         ### VARIABLES COMPOSITION ###
 
             local _http_status_code=$( curl -L -s -o /dev/null -w "%{http_code}" "${_url}")
-        
-        
+
+
         ### EXECCUTION ###
-            
+
             if [ "${_http_status_code}" -gt 299 ]
                 then
                     Print_Warning "Http Status Code" "${_http_status_code}"
@@ -77,7 +77,7 @@ set -e
                     Print_Fatal_Error "Sym Link already exists" "${_sym_link_name}"
             fi
     }
-    
+
     function Abort_If_Already_Installed()
     {
         ### VARIABLES ARGUMENTS ###
@@ -92,13 +92,13 @@ set -e
                     Print_Fatal_Error "Bash Package Manager is already installed" "${_package_manager_script}"
             fi
     }
-    
+
     function Install_Bash_Package_Manager()
     {
         ### VARIABLES ARGUMENTS ###
 
             local _bash_package_manager_version="${1?}"
-            
+
             local _git_url="${2?}"
 
             local _package_manager_dir="${3?}"
@@ -111,7 +111,7 @@ set -e
             mkdir -p "${_package_manager_dir}"
 
             cd "${_package_manager_dir}"
-            
+
             git clone -q --depth 1 -b "${_bash_package_manager_version}" "${_git_url}" .
 
             # we want to ignore this type of errors:
@@ -131,7 +131,7 @@ set -e
         ### EXECUTION ###
 
             Print_Info "${_sym_link} is a Sym Link pointing to" "${_from_script}"
-        
+
             ln -s "${_from_script}" "${_sym_link}"
     }
 
@@ -147,9 +147,9 @@ set -e
 
             local _shell_file="${_home_path}"/"${_file_name}"
 
-        
+
         ### EXECCUTION ###
-            
+
             ( [ $(grep -c "${_home_path}" "${_shell_file}") -eq 0 ] || [ $(grep -c ~/bin "${_shell_file}") -eq 0 ] ) && return 0 || return 1
     }
 
@@ -163,7 +163,7 @@ set -e
 
 
         ### EXECCUTION ###
-            
+
             if [ -f "${_home_path}"/.profile ] && Is_Home_User_Bin_Not_In_Path "${_home_path}" ".profile"
                 then
                     echo "export PATH=${_home_bin_path}:${PATH}"  >> "${_home_path}/.profile"
@@ -191,7 +191,7 @@ set -e
 
 
         ### EXECCUTION ###
-            
+
             Print_Info "Share Me On Twitter" "${_twitter_url}"
             echo
     }
@@ -200,18 +200,10 @@ set -e
 ########################################################################################################################
 # Variables Defaults
 ########################################################################################################################
-    
+
     sym_link_name="bpm"
 
     script_name="package-manager"
-
-    bin_dir="/home/${USER}/bin"
-
-    package_manager_dir="${bin_dir}/vendor/exadra37-bash/package-manager"
-
-    package_manager_script="${package_manager_dir}/src/${script_name}.sh"
-    
-    sym_link="${bin_dir}/${sym_link_name}"
 
     git_url=https://github.com/exadra37-bash/package-manager.git
 
@@ -219,8 +211,16 @@ set -e
 ########################################################################################################################
 # Variables Arguments
 ########################################################################################################################
-   
+
     bash_package_manager_version="${1:-last-stable-release}"
+
+    bin_dir="${2:-/home/${USER}/bin}"
+
+    package_manager_dir="${bin_dir}/vendor/exadra37-bash/package-manager"
+
+    package_manager_script="${package_manager_dir}/src/${script_name}.sh"
+
+    sym_link="${bin_dir}/${sym_link_name}"
 
 
 ########################################################################################################################
@@ -230,14 +230,14 @@ set -e
     Abort_If_Url_Not_Available "${git_url}"
 
     Abort_If_Sym_Link_Already_Exists "${sym_link}"
-    
+
     Abort_If_Sym_Link_Already_Exists "${bin_dir}/${script_name}"
 
     Abort_If_Already_Installed "${package_manager_script}"
-    
+
     Install_Bash_Package_Manager "${bash_package_manager_version}" "${git_url}" "${package_manager_dir}"
 
-    Create_Sym_Link "${package_manager_script}" "${sym_link}" 
+    Create_Sym_Link "${package_manager_script}" "${sym_link}"
 
     Export_Path
 

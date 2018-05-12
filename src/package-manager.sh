@@ -21,7 +21,7 @@ set -e
 
     ([ -z "${1}" ] || [ "-h" == "${1}" ] || [ "--help" == "${1}" ]) && Print_Help && exit 0
 
-    ([ "-v" == "${1}" ] || [ "--version" == "${1}" ]) && Print_Version && exit 0
+    ([ "-v" == "${1}" ] || [ "--version" == "${1}" ]) && cd ${script_dir} && Print_Version && exit 0
 
     # see how to use in https://github.com/exadra37-bash/package-manager/blob/master/README.md
     "$@"
