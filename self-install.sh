@@ -186,7 +186,7 @@ set -e
                     echo "export ${PATH}"  >> "${_home_path}/.zshrc"
             fi
 
-            export "${PATH}"
+            export PATH
     }
 
     function Tweet_Me()
