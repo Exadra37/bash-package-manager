@@ -141,6 +141,7 @@ set -e
 
             local _home_path="${1}"
             local _file_name="${2}"
+            local _bin_dir="${3?}"
 
 
         ### VARIABLES COMPOSITION ###
@@ -150,33 +151,38 @@ set -e
 
         ### EXECCUTION ###
 
-            ( [ $(grep -c "${_home_path}" "${_shell_file}") -eq 0 ] || [ $(grep -c ~/bin "${_shell_file}") -eq 0 ] ) && return 0 || return 1
+            if [ $(grep -c "${_home_path}" "${_shell_file}") -eq 0 ] || [ $(grep -c ${_bin_dir} "${_shell_file}") -eq 0 ]
+                then
+                    return 0
+            fi
+
+            return 1
     }
+
 
     function Export_Path ()
     {
         ### VARIABLES DEFAULTS ###
 
             local _home_path=/home/"${USER}"
-
-            local _home_bin_path="${home_user}/bin"
+            local _bin_dir="${1?}"
 
 
         ### EXECCUTION ###
 
-            if [ -f "${_home_path}"/.profile ] && Is_Home_User_Bin_Not_In_Path "${_home_path}" ".profile"
+            if [ -f "${_home_path}"/.profile ] && Is_Home_User_Bin_Not_In_Path "${_home_path}" ".profile" "${bin_dir}"
                 then
-                    echo "export PATH=${_home_bin_path}:${PATH}"  >> "${_home_path}/.profile"
+                    echo "export PATH=${_bin_dir}:${PATH}"  >> "${_home_path}/.profile"
             fi
 
-            if [ -f "${_home_path}"/.bash_profile ] && Is_Home_User_Bin_Not_In_Path "${_home_path}" ".bash_profile"
+            if [ -f "${_home_path}"/.bash_profile ] && Is_Home_User_Bin_Not_In_Path "${_home_path}" ".bash_profile" "${bin_dir}"
                 then
-                    echo "export PATH=${_home_bin_path}:${PATH}"  >> "${_home_path}/.bash_profile"
+                    echo "export PATH=${_bin_dir}:${PATH}"  >> "${_home_path}/.bash_profile"
             fi
 
-            if [ -f "${_home_path}"/.zshrc ] && Is_Home_User_Bin_Not_In_Path "${_home_path}" ".zshrc"
+            if [ -f "${_home_path}"/.zshrc ] && Is_Home_User_Bin_Not_In_Path "${_home_path}" ".zshrc" "${bin_dir}"
                 then
-                    echo "export PATH=${_home_bin_path}:${PATH}"  >> "${_home_path}/.zshrc"
+                    echo "export PATH=${_bin_dir}:${PATH}"  >> "${_home_path}/.zshrc"
             fi
     }
 
