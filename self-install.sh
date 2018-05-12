@@ -139,7 +139,7 @@ set -e
     {
         ### VARIABLES DEFAULTS ###
 
-            local _message="All #Developers, #DevOps and #SysAdmins should try #Bash_Package_Manager by @exadra37."
+            local _message="I invite #Developers, #DevOps and #SysAdmins to take for a spin the awesome #Bash_Package_Manager by @exadra37."
             local _message="${_message// /\%%20}"
             local _message="${_message//#/\%%23}"
             local _twitter_url="https://twitter.com/home?status=${_message}"

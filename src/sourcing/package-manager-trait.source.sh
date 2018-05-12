@@ -66,40 +66,18 @@ set -e
         Install_Required_Packages "${for_vendor_path}"
     }
 
-
     function Git_Soft_Clone
     {
         local from_github_repo="${1}"
         local to_vendor_path="${2}"
         local package_version="${3}"
 
-        git clone -q -b "${package_version}" --depth 1 "${from_github_repo}" "${to_vendor_path}" &> /dev/null
+        git clone -q -b "${package_version}" --depth 1 "${from_github_repo}" "${to_vendor_path}" 2> /dev/null
 
-        # We only want to checkout to a new branch if package version is a tag, because when is a branch git clone will do that for us.
-        if Is_Git_Tag "${package_version}" "${to_vendor_path}"
-            then
-                cd "${to_vendor_path}"
-
-                git checkout -q -b "${package_version}"
-        fi
-    }
-
-    function Is_Git_Tag()
-    {
-        ### VARIABLES ARGUMENTS ###
-
-            local _package_version="${1?}"
-            local _to_vendor_path="${2}"
-
-
-        ### EXECUTION ###
-
-            if [ -z "$(cd "${_to_vendor_path}" && git tag)" ]
-                then
-                    return 1 # no git tags
-            fi
-
-            return 0 # we have git tags
+        # when the package version is a tag we want to create a new branch, otherwise want to ignore this 
+        # type of errors:
+        #   fatal: A branch named 'last-stable-release' already exists.
+        git checkout -q -b "${package_version}" 2>/dev/null || true
     }
 
     function Auto_Source_Dependency
