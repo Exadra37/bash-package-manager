@@ -135,48 +135,6 @@ set -e
             ln -s "${_from_script}" "${_sym_link}"
     }
 
-    function Is_Home_User_Bin_Not_In_Path()
-    {
-        ### VARIABLES ARGUMENTS ###
-
-            local _home_path="${1}"
-            local _file_name="${2}"
-            local _bin_dir="${3?}"
-
-
-        ### VARIABLES COMPOSITION ###
-
-            local _shell_file="${_home_path}"/"${_file_name}"
-
-
-        ### EXECCUTION ###
-
-            if [ -z "${PATH##*${_bin_dir}*}" ]
-                then
-                    return 0 # true
-            fi
-
-            return 1 # false
-    }
-
-
-    function Export_Path ()
-    {
-        ### VARIABLES DEFAULTS ###
-
-            local _home_path=/home/"${USER}"
-            local _bin_dir="${1?}"
-
-            
-        ### EXECCUTION ###
-
-            if [ -z "${PATH##*${_bin_dir}*}" ]
-                then
-                    PATH=${_bin_dir}:${PATH}
-                    export PATH
-            fi
-    }
-
     function Tweet_Me()
     {
         ### VARIABLES DEFAULTS ###
@@ -236,9 +194,8 @@ set -e
 
     Create_Sym_Link "${package_manager_script}" "${sym_link}"
 
-    #Export_Path "${bin_dir}"
-
     # Let's test it
+    bpm --version
     bpm --help
 
     Tweet_Me
