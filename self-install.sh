@@ -219,7 +219,8 @@ set -e
 
     sym_link="${bin_dir}/${sym_link_name}"
 
-    bin_package_installer="https://gitlab.com/exadra37-bash/bin-package-installer/raw/last-stable-release/self-installer.sh"
+    #bin_package_installer="https://gitlab.com/exadra37-bash/bin-package-installer/raw/last-stable-release/self-installer.sh"
+    bin_package_installer="https://gitlab.com/exadra37-bash/bin-package-installer/raw/new-approach/self-installer.sh"
 
 ########################################################################################################################
 # Execution
