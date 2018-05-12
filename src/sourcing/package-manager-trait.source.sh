@@ -193,14 +193,28 @@ set -e
 
     function Print_Version
     {
-        local versionColor="green";
-        local authorColor="yellow";
+        local versionColor="green"
+        local authorColor="yellow"
 
-        Print_Line_Break;
+        local version=$(git describe --exact-match 2> /dev/null || git rev-parse --abbrev-ref HEAD)
 
-        Print_Text "Bash Package Manager "; Print_Text_Colored "0.1.0" "${versionColor}"; Print_Text " by "; Print_Text_Colored "Exadra37" "${authorColor}";
+        Print_Line_Break
 
-        Print_Empty_Line;
+        Print_Text "Bash Package Manager"
+
+        Print_Line_Break
+
+        Print_Text "Version: "
+
+        Print_Text_Colored "${version}" "${versionColor}"
+
+        Print_Line_Break
+
+        Print_Text "Author: "
+
+        Print_Text_Colored "Exadra37" "${authorColor}"
+
+        Print_Empty_Line
     }
 
 
@@ -210,7 +224,6 @@ set -e
 
     #script_dir=$( cd "$( dirname "$0" )" && pwd )
     script_dir=$( dirname $(dirname $(readlink -f $0)))
-
 
     Auto_Source_Dependency "exadra37-bash" "file-system" "0.3.0" src/sourcing/file-system-trait.source.sh "${script_dir}"
     Auto_Source_Dependency "exadra37-bash" "pretty-print" "0.1.0" src/sourcing/pretty-print-trait.source.sh "${script_dir}"
