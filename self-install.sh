@@ -219,24 +219,33 @@ set -e
 
     sym_link="${bin_dir}/${sym_link_name}"
 
+    bin_package_installer="https://gitlab.com/exadra37-bash/bin-package-installer/raw/last-stable-release/self-installer.sh"
 
 ########################################################################################################################
 # Execution
 ########################################################################################################################
 
-    Abort_If_Url_Not_Available "${git_url}"
+    #Abort_If_Url_Not_Available "${git_url}"
+    Abort_If_Url_Not_Available "${bin_package_installer}"
 
-    Abort_If_Sym_Link_Already_Exists "${sym_link}"
+    #Abort_If_Sym_Link_Already_Exists "${sym_link}"
 
-    Abort_If_Sym_Link_Already_Exists "${bin_dir}/${script_name}"
+    # Abort_If_Sym_Link_Already_Exists "${bin_dir}/${script_name}"
 
-    Abort_If_Already_Installed "${package_manager_script}"
+    # Abort_If_Already_Installed "${package_manager_script}"
 
-    Install_Bash_Package_Manager "${bash_package_manager_version}" "${git_url}" "${package_manager_dir}"
+    # Install_Bash_Package_Manager "${bash_package_manager_version}" "${git_url}" "${package_manager_dir}"
 
-    Create_Sym_Link "${package_manager_script}" "${sym_link}"
+    # Create_Sym_Link "${package_manager_script}" "${sym_link}"
 
-    Export_Path "${bin_dir}"
+    # Export_Path "${bin_dir}"
+
+    curl -L ${bin_package_installer} | bash -s -- \
+        -n exadra37-bash \
+        -p package-manager \
+        -t ${bash_package_manager_version} \
+        -s bpm:src/package-manager.sh \
+        -b "${bin_dir}"
 
     # Let's test it
     bpm --help
