@@ -167,23 +167,26 @@ set -e
             local _home_path=/home/"${USER}"
             local _bin_dir="${1?}"
 
+            PATH=${_bin_dir}:${PATH}
 
         ### EXECCUTION ###
 
             if [ -f "${_home_path}"/.profile ] && Is_Home_User_Bin_Not_In_Path "${_home_path}" ".profile" "${bin_dir}"
                 then
-                    echo "export PATH=${_bin_dir}:${PATH}"  >> "${_home_path}/.profile"
+                    echo "export ${PATH}"  >> "${_home_path}/.profile"
             fi
 
             if [ -f "${_home_path}"/.bash_profile ] && Is_Home_User_Bin_Not_In_Path "${_home_path}" ".bash_profile" "${bin_dir}"
                 then
-                    echo "export PATH=${_bin_dir}:${PATH}"  >> "${_home_path}/.bash_profile"
+                    echo "export ${PATH}"  >> "${_home_path}/.bash_profile"
             fi
 
             if [ -f "${_home_path}"/.zshrc ] && Is_Home_User_Bin_Not_In_Path "${_home_path}" ".zshrc" "${bin_dir}"
                 then
-                    echo "export PATH=${_bin_dir}:${PATH}"  >> "${_home_path}/.zshrc"
+                    echo "export ${PATH}"  >> "${_home_path}/.zshrc"
             fi
+
+            export "${PATH}"
     }
 
     function Tweet_Me()
