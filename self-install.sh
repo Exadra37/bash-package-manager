@@ -106,7 +106,7 @@ set -e
 
         ### EXECUTION ###
 
-            Print_Info "Installing Bash Package Manager from" "${_git_url}"
+            Print_Info "Installing Bash Package Manager '${_bash_package_manager_version}'' from" "${_git_url}"
 
             mkdir -p "${_package_manager_dir}"
 
