@@ -72,6 +72,8 @@ set -e
         local to_vendor_path="${2}"
         local package_version="${3}"
 
+        mkdir -p "${to_vendor_path}"
+
         cd "${to_vendor_path}"
 
         git clone -q -b "${package_version}" --depth 1 "${from_github_repo}" . 2> /dev/null
