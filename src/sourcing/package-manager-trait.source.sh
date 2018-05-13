@@ -10,6 +10,45 @@ set -e
 # Functions for Sourcing and Cloning Dependencies
 #################################################################################################################################################################
 
+    function Create_Sym_Links()
+    {
+        local _symlinks_map="${1?}"
+        local _symlink_from_dir="${2?}"
+        local _symlink_to_dir="${3?}"
+
+        # symlinks map is like 'symlink:bash-script.sh' or 'symlink:bash-script.sh,symlink2:bash-script2.sh'
+        IFS='|' read -ra maps <<< "${_symlinks_map}"
+        for map in "${maps[@]}"
+            do
+                # Get everything before first occurrence of ':' in the $map var.
+                # Like return demo from 'demo:bash-script.sh'.
+                local _symlink=${map%%:*}
+
+                # Get everything after last occurrence of ':' in the $map var.
+                # Like returning 'bash-script.sh' from 'demo:bash-script.sh'.
+                local _script_to_link=${map#*:}
+
+                # Path like: /home/$USER/bin/vendor/vendor-name/package-name/scr/bash-script.sh
+                local _symlink_to="${_symlink_to_dir}"/"${_script_to_link}"
+
+                # symlynks list like:
+                #  - 'symlink1,'
+                #  - 'symlink1, symlink2,'
+                local _new_symlinks="${_symlink},${_new_symlinks}"
+
+                if [ -z "${_symlink}" ] || [ -z "${_script_to_link}" ]
+                    then
+                        Print_Fatal_Error "Invalid SymLink map: ${map}"
+
+                        exit 1
+                fi
+
+                Print_Info "${_symlink} is a SymLink pointing to" "${_symlink_to}"
+
+                ln -s "${_symlink_to}" "${_symlink_from_dir}"/"${_symlink}"
+        done
+    }
+
     function Install_Required_Packages
     {
         local package_path="${1:-.}"
@@ -30,8 +69,14 @@ set -e
                         local vendor_name="${package[1]}"
                         local package_name="${package[2]}"
                         local package_version="${package[3]}"
+                        local symlinks_map="${package[4]}"
 
                         Git_Clone_Required_Package_Recursively "${vendor_name}" "${package_name}" "${package_version}" "${repo_domain_name}" "${for_vendor_path}"
+                        
+                        if [ ! -z "${symlinks_map}" ]
+                            then
+                                Create_Sym_Links "${symlinks_map}" "${package_path}" "${for_vendor_path}/${vendor_name}/${package_name}"
+                        fi
 
                 done < "${packages_file}"
         fi
