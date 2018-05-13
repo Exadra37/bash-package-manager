@@ -72,12 +72,16 @@ set -e
         local to_vendor_path="${2}"
         local package_version="${3}"
 
-        git clone -q -b "${package_version}" --depth 1 "${from_github_repo}" "${to_vendor_path}" 2> /dev/null
+        cd "${to_vendor_path}"
+
+        git clone -q -b "${package_version}" --depth 1 "${from_github_repo}" . 2> /dev/null
 
         # when the package version is a tag we want to create a new branch, otherwise want to ignore this 
         # type of errors:
         #   fatal: A branch named 'last-stable-release' already exists.
         git checkout -q -b "${package_version}" 2>/dev/null || true
+
+        cd - > /dev/null
     }
 
     function Auto_Source_Dependency

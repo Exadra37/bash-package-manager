@@ -118,7 +118,7 @@ set -e
             #   fatal: A branch named 'last-stable-release' already exists.
             git checkout -q -b "${_bash_package_manager_version}" 2>/dev/null || true
 
-            cd -
+            cd - > /dev/null
     }
 
     function Create_Sym_Link()
