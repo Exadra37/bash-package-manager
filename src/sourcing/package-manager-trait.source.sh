@@ -31,10 +31,7 @@ set -e
                 # Path like: /home/$USER/bin/vendor/vendor-name/package-name/scr/bash-script.sh
                 local _symlink_to="${_symlink_to_dir}"/"${_script_to_link}"
 
-                # symlynks list like:
-                #  - 'symlink1,'
-                #  - 'symlink1, symlink2,'
-                local _new_symlinks="${_symlink},${_new_symlinks}"
+                local _symlink_path="${_symlink_from_dir}/${_symlink}"
 
                 if [ -z "${_symlink}" ] || [ -z "${_script_to_link}" ]
                     then
@@ -43,9 +40,11 @@ set -e
                         exit 1
                 fi
 
-                Print_Info "${_symlink} is a SymLink pointing to" "${_symlink_to}"
-
-                ln -s "${_symlink_to}" "${_symlink_from_dir}"/"${_symlink}"
+                if [ ! -L "${_symlink_path}" ]
+                    then
+                        Print_Info "${_symlink} is a SymLink pointing to" "${_symlink_to}"
+                        ln -s "${_symlink_to}" "${_symlink_path}"
+                fi
         done
     }
 
