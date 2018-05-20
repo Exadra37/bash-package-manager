@@ -106,7 +106,7 @@ set -e
 
         ### EXECUTION ###
 
-            Print_Info "Installing Bash Package Manager from" "${_git_url}"
+            Print_Info "Installing Bash Package Manager tag/branch '${_bash_package_manager_version}' from" "${_git_url}"
 
             mkdir -p "${_package_manager_dir}"
 
@@ -117,6 +117,8 @@ set -e
             # we want to ignore this type of errors:
             #   fatal: A branch named 'last-stable-release' already exists.
             git checkout -q -b "${_bash_package_manager_version}" 2>/dev/null || true
+
+            cd - > /dev/null
     }
 
     function Create_Sym_Link()
@@ -139,7 +141,7 @@ set -e
     {
         ### VARIABLES DEFAULTS ###
 
-            local _message="All #Developers, #DevOps and #SysAdmins should try #Bash_Package_Manager by @exadra37."
+            local _message="I invite #Developers, #DevOps and #SysAdmins to take for a spin the awesome #Bash_Package_Manager by @exadra37."
             local _message="${_message// /\%%20}"
             local _message="${_message//#/\%%23}"
             local _twitter_url="https://twitter.com/home?status=${_message}"
