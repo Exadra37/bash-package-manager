@@ -162,7 +162,7 @@ set -e
 
     script_name="package-manager"
 
-    git_url=https://github.com/exadra37-bash/package-manager.git
+    git_url=https://gitlab.com/exadra37-bash/package-manager.git
 
 
 ########################################################################################################################
