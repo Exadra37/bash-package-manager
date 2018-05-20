@@ -12,17 +12,30 @@ Invoking `install` will read all required packages from file `required-packages.
 
 This is done recursively, by looking in each package it installs, for the file `required-packages.pkg` and installing also that packages, until no more required packages are found to install.
 
-The file `required-packages.pkg` must require a package per line in the format `repository-service-url,vendor-name,package-name,package-version`.
+The file `required-packages.pkg` must require a package per line in the format `repository-service-url,vendor-name,package-name,package-version,sym-link:package/path/to/bash-script.sh`. The
+symbolic link declaration is optional.
 
-The file `required-packages.pkg` located in the root of you package or project should look like this:
+The file `required-packages.pkg` must be located in the root of your package.
+
+##### Examples
+
+without symbolic links as per seen in [Bash Package Manager](https://gitlab.com/exadra37-bash/package-manager/blob/684902c7eda5b84b24b06f02f0896cca6d021aa8/required-packages.pkg) itself...
 
 ```bash
-github.com,exadra37-bash,file-system,0.2.0
-github.com,exadra37-bash,git-helpers,0.1.0
+github.com,exadra37-bash,file-system,0.3.0
 github.com,exadra37-bash,pretty-print,0.1.0
-github.com,exadra37-bash,strings-manipulation,0.2.0
-github.com,exadra37-bash,package-signature,0.1.0
 ```
+
+with symbolic links as per seen in [VLC Media Player](https://gitlab.com/exadra37-bash/bin/user-bin-packages/blob/4361f41f8c5f691a8fb231ab10ceeef727ee162c/required-packages.pkg)...
+
+```bash
+gitlab.com,exadra37-playground/docker,android-studio-3,master,android-studio:bin/studio.sh
+gitlab.com,exadra37-docker/cli-tool,fuzzy-finder,latest,fuzzy-finder:bin/fuzzy-finder
+gitlab.com,exadra37-docker/api-tool,postman,master,postman:src/bin/postman
+gitlab.com,exadra37-docker/productivity-tool,go-for-it,latest,go-for-it:src/dockerize-gui-app-demo.sh
+gitlab.com,exadra37-docker/media,vlc,master,vlc:bin/vlc.sh
+```
+
 **NOTE: DO NOT LEAVE BLANK SPACES BETWEEN COMMAS**
 
 To auto install recursively the above packages, just type from the root of your project:
